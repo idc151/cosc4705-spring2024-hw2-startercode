@@ -1,6 +1,7 @@
 import struct
 from message import UnencryptedIMMessage
 
+#hello this is 
 def main():
     msg = UnencryptedIMMessage("msherr", "cosc4705 is really fun!")
 
