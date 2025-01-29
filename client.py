@@ -56,7 +56,7 @@ def main():
     
     log.debug(f"connecting to server {args.server}")
     try:
-        s = socket.create_connection((args.server,args.port))
+        s = socket.create_connection((args.server,args.port)) 
         log.info("connected to server")
     except:
         log.error("cannot connect")

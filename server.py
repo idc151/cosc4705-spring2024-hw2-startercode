@@ -35,9 +35,9 @@ def main():
     log.info(f"running with {args}")
     
     log.debug("waiting for new clients...")
-    serverSock = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-    serverSock.bind(("",args.port))
-    serverSock.listen()
+    serverSock = socket.socket(socket.AF_INET,socket.SOCK_STREAM) #creating a socket
+    serverSock.bind(("",args.port)) #binding the socket to the public host and the port
+    serverSock.listen() #becomes the server socket
 
     clientList = []
 
@@ -45,13 +45,45 @@ def main():
 
         # HERE'S WHERE YOU NEED TO FILL IN STUFF
 
-        # DELETE THE NEXT TWO LINES. It's here now to prevent busy-waiting.
-        time.sleep(1)
-        log.info("not much happening here.  someone should rewrite this part of the code.")
+        # add server socket and all clients to select()
+        read, _, _  = select.select([serverSock] + clientList, [],[])
 
-                            
-    
+        for sock in read:
+            if sock == serverSock: # new client connection 
+                client_socket, client_address = serverSock.accept()
+                print("New connection from: ", client_address)
+                clientList.append(client_socket) #add new client to the list
 
+            else: # existing clent sent a message
+                
+                try:
+                    #read the first 4 bytes
+                    packed_len = sock.recv(4,socket.MSG_WAITALL)
+                    if not packed_len: #client disconnected
+                        print("Connection closed: ", sock.getpeername())
+                        sock.close()
+                        clientList.remove(sock)
+                        continue
+
+                    #unpack the length of the message
+                    message_length = struct.unpack('!I', packed_len[0])
+
+                    # read the actual message
+                    message = sock.recv(,socket.MSG_WAITALL)
+                    if not message: #client disconnected
+                        print("Connection closed: ", sock.getpeername())
+                        sock.close()
+                        clientList.remove(sock)
+                        continue
+                    
+                    for recipient in clientList:
+                        if recipient != sock and recipient != serverSock:
+                            recipient.send(packed_len + message)
+                except:
+                    print("Error with client: ", sock.getpeername())
+                    sock.close()
+                    clientList.remove(sock)
+                     
 if __name__ == "__main__":
     exit(main())
 
