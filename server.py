@@ -66,7 +66,7 @@ def main():
                         continue
 
                     #unpack the length of the message
-                    message_length = struct.unpack('!I', packed_len[0])
+                    message_length = struct.unpack('!I', packed_len) [0]
 
                     # read the actual message
                     message = sock.recv(message_length,socket.MSG_WAITALL)

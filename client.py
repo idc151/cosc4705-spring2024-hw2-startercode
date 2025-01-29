@@ -67,10 +67,47 @@ def main():
 
     while True:
         # HERE'S WHERE YOU NEED TO FILL IN STUFF
+        traffic, _,_ = select.select(readSet, [], [])
 
-        # DELETE THE NEXT TWO LINES. It's here now to prevent busy-waiting.
-        time.sleep(1)
-        log.info("not much happening here.  someone should rewrite this part of the code.")
+        for skt in traffic:
+            if skt == s:
+                # read fir 4 bytes
+                pack = s.recv(4, socket.MSG_WAITALL)
+                if not pack:
+                    log.error("Lost conection to server.")
+                    exit(1)
+                
+                # unpack
+                msg_len = struct.unpack("!I", pack) [0]
+
+                # read actual message
+                enmessage = s.recv(msg_len, socket.MSG_WAITALL).decode()
+                newMSG = UnencryptedIMMessage()
+                newMSG.parseJSON(enmessage)
+
+                print(newMSG)
+
+            elif skt == sys.stdin:
+                draft = input()
+
+                if draft:
+                        outbox = UnencryptedIMMessage(args.nickname, draft)
+                        size, enmail = outbox.serialize()
+
+                        # send the entire message at one time
+                        s.sendall(size + enmail)
+
+                        
+
+
+
+
+            
+
+            
+
+
+                
 
         
 
