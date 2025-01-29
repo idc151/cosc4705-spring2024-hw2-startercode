@@ -69,7 +69,7 @@ def main():
                     message_length = struct.unpack('!I', packed_len[0])
 
                     # read the actual message
-                    message = sock.recv(,socket.MSG_WAITALL)
+                    message = sock.recv(message_length,socket.MSG_WAITALL)
                     if not message: #client disconnected
                         print("Connection closed: ", sock.getpeername())
                         sock.close()
