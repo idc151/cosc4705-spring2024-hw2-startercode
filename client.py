@@ -72,7 +72,7 @@ def main():
         # wanna handle the user input first
         for source in active:
             if source == sys.stdin:
-                userInput = input().strip() # handles user input
+                userInput = input()
                 if userInput:
                         # create message object
                         outgoing = UnencryptedIMMessage(args.nickname, draft)
