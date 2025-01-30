@@ -75,7 +75,7 @@ def main():
                 userInput = input()
                 if userInput:
                         # create message object
-                        outgoing = UnencryptedIMMessage(args.nickname, draft)
+                        outgoing = UnencryptedIMMessage(args.nickname, userInput)
                         
                         # get ready to send
                         size, enmail = outgoing.serialize()
