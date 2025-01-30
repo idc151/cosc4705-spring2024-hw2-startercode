@@ -99,22 +99,8 @@ def main():
                         size, enmail = outbox.serialize()
 
                         # send the entire message at one time
-                        s.sendall(size + enmail)
-
-                        
-
-
-
-
-            
-
-            
-
-
-                
-
+                        s.send(size + enmail)
         
-
 if __name__ == "__main__":
     exit(main())
 

@@ -73,7 +73,7 @@ def main():
 
                     for recipient in clientList:
                         if recipient != sock and recipient != serverSock:
-                            recipient.sendall(packed_len + message)
+                            recipient.send(packed_len + message)
                 except:
                     print("Error with client: ", sock.getpeername())
                     clientList.remove(sock)
