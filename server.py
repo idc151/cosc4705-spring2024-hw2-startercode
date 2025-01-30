@@ -72,7 +72,7 @@ def main():
                     message = sock.recv(message_length,socket.MSG_WAITALL)
 
                     for recipient in clientList:
-                        if recipient != sock and recipient != serverSock:
+                        if recipient != sock: #changed code here prevents sender from recieving own message  
                             recipient.send(packed_len + message)
                 except:
                     print("Error with client: ", sock.getpeername())

@@ -67,39 +67,40 @@ def main():
 
     while True:
         # HERE'S WHERE YOU NEED TO FILL IN STUFF
-        traffic, _,_ = select.select(readSet, [], [])
+        active, _,_ = select.select(readSet, [], [])
 
-        for skt in traffic:
-            if skt == s:
-                # read fir 4 bytes
+        # wanna handle the user input first
+        for source in active:
+            if source == sys.stdin:
+                userInput = input().strip() # handles user input
+                if userInput:
+                        # create message object
+                        outgoing = UnencryptedIMMessage(args.nickname, draft)
+                        
+                        # get ready to send
+                        size, enmail = outgoing.serialize()
+
+                        # send the entire message at one time
+                        s.send(size + enmail)
+
+            elif source == s:
+                # read for 4 bytes
                 pack = s.recv(4, socket.MSG_WAITALL)
                 if not pack:
                     log.error("Lost conection to server.")
                     exit(1)
                 
                 # unpack
-                msg_len = struct.unpack("!I", pack) [0]
+                msg_length = struct.unpack("!I", pack) [0]
 
                 # read actual message
-                enmessage = s.recv(msg_len, socket.MSG_WAITALL).decode()
+                enmessage = s.recv(msg_length, socket.MSG_WAITALL).decode()
                 
+                # process message
                 newMSG = UnencryptedIMMessage()
                 newMSG.parseJSON(enmessage)
 
                 print(newMSG)
-
-            elif skt == sys.stdin:
-                draft = input()
-
-                if draft:
-                        # create message object
-                        outbox = UnencryptedIMMessage(args.nickname, draft)
-                        
-                        # get ready to send
-                        size, enmail = outbox.serialize()
-
-                        # send the entire message at one time
-                        s.send(size + enmail)
         
 if __name__ == "__main__":
     exit(main())
