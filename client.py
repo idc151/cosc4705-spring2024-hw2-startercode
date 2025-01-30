@@ -95,6 +95,7 @@ def main():
                         # create message object
                         outbox = UnencryptedIMMessage(args.nickname, draft)
                         
+                        # get ready to send
                         size, enmail = outbox.serialize()
 
                         # send the entire message at one time
