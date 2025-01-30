@@ -61,8 +61,8 @@ def main():
                     packed_len = sock.recv(4,socket.MSG_WAITALL)
                     if not packed_len: # client disconnected
                         print("Connection closed: ", sock.getpeername())
-                        sock.close()
                         clientList.remove(sock)
+                        sock.close()
                         continue
 
                     # unpack the length of the message
@@ -70,19 +70,15 @@ def main():
 
                     # read the actual message
                     message = sock.recv(message_length,socket.MSG_WAITALL)
-                    if not message: #client disconnected
-                        print("Connection closed: ", sock.getpeername())
-                        sock.close()
-                        clientList.remove(sock)
-                        continue
-                    
+
                     for recipient in clientList:
                         if recipient != sock and recipient != serverSock:
                             recipient.sendall(packed_len + message)
                 except:
                     print("Error with client: ", sock.getpeername())
-                    sock.close()
                     clientList.remove(sock)
+                    sock.close()
+                    
                      
 if __name__ == "__main__":
     exit(main())

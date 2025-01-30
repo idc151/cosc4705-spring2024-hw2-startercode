@@ -82,6 +82,7 @@ def main():
 
                 # read actual message
                 enmessage = s.recv(msg_len, socket.MSG_WAITALL).decode()
+                
                 newMSG = UnencryptedIMMessage()
                 newMSG.parseJSON(enmessage)
 
@@ -91,7 +92,9 @@ def main():
                 draft = input()
 
                 if draft:
+                        # create message object
                         outbox = UnencryptedIMMessage(args.nickname, draft)
+                        
                         size, enmail = outbox.serialize()
 
                         # send the entire message at one time
